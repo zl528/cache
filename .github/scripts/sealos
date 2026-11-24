@@ -24,7 +24,7 @@ is_released() {
   popd >/dev/null
 }
 
-for vSEALOS in $(is_released); do
+for vSEALOS in v5.2.0; do
   image_tag="sealos-$vSEALOS-$ARCH"
   pushd "$(mktemp -d)" >/dev/null || exit
   until curl -sL "https://github.com/labring/sealos/releases/download/$vSEALOS/sealos_${vSEALOS#*v}_linux_$ARCH.tar.gz" | tar -xz; do sleep 3; done
