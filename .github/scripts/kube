@@ -175,7 +175,7 @@ kube_released() {
   local image_tag="kubernetes-$ARCH" vKUBE
   pushd "$(mktemp -d)" >/dev/null || exit
   if [[ -s "/tmp/$K8S_MD.versions" ]]; then
-    cri_released "${K8S_MD##*-}"
+    #cri_released "${K8S_MD##*-}"
     while read -r vKUBE; do
       kube_upgrade "$vKUBE"
     done <"/tmp/$K8S_MD.versions"
