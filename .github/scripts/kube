@@ -68,7 +68,13 @@ EOF
     sealos_tag="sealos-$(
       until git ls-remote --refs --sort="-version:refname" --tags "https://github.com/labring/sealos.git" | cut -d/ -f3- | grep -E "^v4[0-9.]+$"; do sleep 3; done | head -n 1
     )-amd64"
-    until sudo docker run --rm -v "/usr/bin:/pwd" -w /sealos --entrypoint /bin/sh "$REGISTRY/$REPOSITORY:$sealos_tag" -c "cp -au sealos /pwd"; do sleep 5; done
+    #until sudo docker run --rm -v "/usr/bin:/pwd" -w /sealos --entrypoint /bin/sh "$REGISTRY/$REPOSITORY:$sealos_tag" -c "cp -au sealos /pwd"; do sleep 5; done
+  for i in $(seq 1 12); do
+    sudo docker run --rm -v "/usr/bin:/pwd" -w /sealos --entrypoint /bin/sh "ghcr.io/labring-actions/cache:$sealos_tag" -c "cp -au sealos /pwd" && break
+    sleep 5
+  done
+  command -v sealos >/dev/null || { echo "ERROR: sealos not installed"; exit 1; }
+
   )
   sudo sealos build -t "kubernetes:$image_tag" --platform "linux/$ARCH" .
   # cache(binary+image)
